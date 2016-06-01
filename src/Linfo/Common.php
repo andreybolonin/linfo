@@ -2,46 +2,73 @@
 
 /**
  * This file is part of Linfo (c) 2014 Joseph Gillotti.
- * 
+ *
  * Linfo is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Linfo is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Linfo.	If not, see <http://www.gnu.org/licenses/>.
  */
 namespace Linfo;
 
+/**
+ * Class Common
+ * @package Linfo
+ */
 class Common
 {
-    protected static $settings = array(),
-        $lang = array();
 
-    // Used for unit tests
+    /**
+     * @var array
+     */
+    protected static $settings = array();
+
+    /**
+     * @var array
+     */
+    protected static $lang = array();
+
+    /**
+     * Used for unit tests
+     * @var bool
+     */
     public static $path_prefix = false;
 
+    /**
+     * @param Linfo $linfo
+     */
     public static function config(Linfo $linfo)
     {
         self::$settings = $linfo->getSettings();
         self::$lang = $linfo->getLang();
     }
 
+    /**
+     *
+     */
     public static function unconfig()
     {
         self::$settings = array();
         self::$lang = array();
     }
 
-    // Certain files, specifcally the pci/usb ids files, vary in location from
-    // linux distro to linux distro. This function, when passed an array of
-    // possible file location, picks the first it finds and returns it. When
-    // none are found, it returns false
+    //
+    /**
+     * Certain files, specifcally the pci/usb ids files, vary in location from
+     * linux distro to linux distro. This function, when passed an array of
+     * possible file location, picks the first it finds and returns it. When
+     * none are found, it returns false
+     *
+     * @param $paths
+     * @return bool|mixed
+     */
     public static function locateActualPath($paths)
     {
         foreach ((array) $paths as $path) {
@@ -54,6 +81,12 @@ class Common
     }
 
     // Append a string to the end of each element in a 2d array
+    /**
+     * @param $array
+     * @param string $string
+     * @param string $format
+     * @return mixed
+     */
     public static function arrayAppendString($array, $string = '', $format = '%1s%2s')
     {
 
@@ -66,13 +99,24 @@ class Common
         return $array;
     }
 
-    // Get a file who's contents should just be an int. Returns zero on failure.
+    /**
+     * Get a file who's contents should just be an int. Returns zero on failure.
+     *
+     * @param $file
+     * @return string
+     */
     public static function getIntFromFile($file)
     {
         return self::getContents($file, 0);
     }
-
-    // Convert bytes to stuff like KB MB GB TB etc
+    
+    /**
+     * Convert bytes to stuff like KB MB GB TB etc
+     *
+     * @param $size
+     * @param int $precision
+     * @return string
+     */
     public static function byteConvert($size, $precision = 2)
     {
 
@@ -94,6 +138,10 @@ class Common
     }
 
     // Like above, but for seconds
+    /**
+     * @param $uptime
+     * @return string
+     */
     public static function secondsConvert($uptime)
     {
 
@@ -135,6 +183,11 @@ class Common
     }
 
     // Get a file's contents, or default to second param
+    /**
+     * @param $file
+     * @param string $default
+     * @return string
+     */
     public static function getContents($file, $default = '')
     {
         if (is_string(self::$path_prefix)) {
@@ -145,12 +198,20 @@ class Common
     }
 
     // Like above, but in lines instead of a big string
+    /**
+     * @param $file
+     * @return array
+     */
     public static function getLines($file)
     {
         return !is_file($file) || !is_readable($file) || !($lines = @file($file, FILE_SKIP_EMPTY_LINES)) ? array() : $lines;
     }
 
     // Make a string safe for being in an xml tag name
+    /**
+     * @param $string
+     * @return string
+     */
     public static function xmlStringSanitize($string)
     {
         return strtolower(preg_replace('/([^a-zA-Z]+)/', '_', $string));
@@ -158,6 +219,11 @@ class Common
 
     // Get a variable from a file. Include it in this function to avoid
     // clobbering the main namespace
+    /**
+     * @param $file
+     * @param $variable
+     * @return bool
+     */
     public static function getVarFromFile($file, $variable)
     {
 
@@ -168,8 +234,8 @@ class Common
 
         require $file;
 
-        // Double dollar sign means treat variable contents 
-        // as the name of a variable. 
+        // Double dollar sign means treat variable contents
+        // as the name of a variable.
         if (isset($$variable)) {
             return $$variable;
         }
@@ -179,6 +245,11 @@ class Common
 
     // Prevent silly conditionals like if (in_array() || in_array() || in_array())
     // Poor man's python's any() on a list comprehension kinda
+    /**
+     * @param $needles
+     * @param $haystack
+     * @return bool
+     */
     public static function anyInArray($needles, $haystack)
     {
         if (!is_array($needles) || !is_array($haystack)) {

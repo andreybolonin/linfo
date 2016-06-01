@@ -34,6 +34,33 @@ use ReflectionException;
  */
 class Linfo
 {
+    /**
+     * @var array
+     */
+    /**
+     * @var array
+     */
+    /**
+     * @var array
+     */
+    /**
+     * @var array
+     */
+    /**
+     * @var array
+     */
+    /**
+     * @var array
+     */
+    /**
+     * @var array|mixed
+     */
+    /**
+     * @var array|mixed|string
+     */
+    /**
+     * @var array|mixed|string
+     */
     protected $settings = array(),
         $lang = array(),
         $info = array(),
@@ -45,6 +72,11 @@ class Linfo
         $linfo_testdir = null,
         $linfo_localdir = null;
 
+    /**
+     * Linfo constructor.
+     * @param array $settings
+     * @throws FatalException
+     */
     public function __construct($settings = array())
     {
 
@@ -87,8 +119,10 @@ class Linfo
         $distro_class = '\\Linfo\\OS\\'.$os;
         $this->parser = new $distro_class($this->settings);
     }
-
-    // Load everything, while obeying permissions...
+    
+    /**
+     * Load everything, while obeying permissions...
+     */
     public function scan()
     {
         $reflector = new ReflectionClass($this->parser);
@@ -292,6 +326,10 @@ class Linfo
         $this->runExtensions();
     }
 
+    /**
+     * @param array $settings
+     * @throws FatalException
+     */
     protected function loadSettings($settings = array())
     {
 
@@ -341,6 +379,9 @@ class Linfo
         $this->settings = $settings;
     }
 
+    /**
+     * @throws FatalException
+     */
     protected function loadLanguage()
     {
 
@@ -367,6 +408,9 @@ class Linfo
         }
     }
 
+    /**
+     * @return bool|string
+     */
     protected function getOS()
     {
         list($os) = explode('_', PHP_OS, 2);
@@ -393,17 +437,20 @@ class Linfo
         // So anything else isn't
         return false;
     }
-
-    /*
+    
+    /**
      * getInfo()
-     *
      * Returning reference so extensions can modify result
+     * @return array|mixed|string
      */
     public function &getInfo()
     {
         return $this->info;
     }
 
+    /**
+     *
+     */
     protected function runExtensions()
     {
         $this->info['extensions'] = array();
@@ -457,46 +504,73 @@ class Linfo
         }
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getLang()
     {
         return $this->lang;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getSettings()
     {
         return $this->settings;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getAppName()
     {
         return $this->app_name;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getVersion()
     {
         return $this->version;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getTimeStart()
     {
         return $this->time_start;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getParser()
     {
         return $this->parser;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getLocalDir()
     {
         return $this->linfo_localdir;
     }
 
+    /**
+     * @return array|mixed|string
+     */
     public function getTestDir()
     {
         return $this->linfo_testdir;
     }
 
+    /**
+     * @return string
+     */
     public function getCacheDir()
     {
         return dirname(dirname(__DIR__)).'/cache/';
